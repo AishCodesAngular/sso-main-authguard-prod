@@ -1,4 +1,4 @@
-import { Component, signal } from '@angular/core';
+import { Component, signal, HostListener } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { SharedService } from './services/shared-service';
@@ -40,7 +40,18 @@ export class AppComponent {
 
 ngOnInit() {
   window.addEventListener('message', this.handleMessage);
+  localStorage.setItem('isRootAppOpen', 'true');
 }
+
+@HostListener('window:beforeunload', ['$event'])
+  unloadHandler(event: Event) {
+    localStorage.setItem('isRootAppOpen', 'false');
+      let postData:any = {
+        'formName': 'error',
+        'isRootAppOpen': localStorage.getItem('isRootAppOpen')
+      }
+    this.sharedService.sendMessageToApp2(postData);
+  }
 
 handleMessage = (event: MessageEvent) => {
   if (event.origin !== 'http://localhost:4201') return;
@@ -70,9 +81,15 @@ onChange($event:any) {
       this.sharedService.openApp2();
   }
 
+  let postData:any = {
+    'formName': $event.target.value,
+    'isRootAppOpen': localStorage.getItem('isRootAppOpen')
+  }
   setTimeout(() => {
-   this.sharedService.sendMessageToApp2($event.target.value);
+   this.sharedService.sendMessageToApp2(postData);
   }, 100); // 100ms is usually enough
   
 }
+
+
 }
