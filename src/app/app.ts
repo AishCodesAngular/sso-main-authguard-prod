@@ -11,7 +11,7 @@ import { SharedService } from './services/shared-service';
   styleUrl: './app.scss'
 })
 export class AppComponent {
-  private app2Url = 'http://localhost:4201';
+  private app2Url = 'https://aishcodesangular.github.io/sso-sub-auth-prod/';
   // private app2Window: Window | null = null;
   message = signal<any>('Waiting for message... from App2');
   counter = signal<number>(0)
@@ -54,7 +54,8 @@ ngOnInit() {
   }
 
 handleMessage = (event: MessageEvent) => {
-  if (event.origin !== 'http://localhost:4201') return;
+  const expectedPath = '/sso-sub-authguard-prod/';
+  if (event.origin + expectedPath  !== 'https://aishcodesangular.github.io/sso-sub-authguard-prod/') return;
   console.log('Message received in App1:', event.data);
   this.message.set(event.data);
   this.conterHandler(event.data.process);
