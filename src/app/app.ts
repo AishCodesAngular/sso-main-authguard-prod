@@ -88,7 +88,7 @@ onChange($event:any) {
   }
   setTimeout(() => {
    this.sharedService.sendMessageToApp2(postData);
-  }, 100); // 100ms is usually enough
+  }, 10); // 100ms is usually enough
   
 }
 
